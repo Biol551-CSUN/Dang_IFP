@@ -1,0 +1,299 @@
+---
+title: "MicF Regulation"
+author: "Alex Dang"
+date: "5/8/2022"
+output: 
+  html_document:
+    toc: TRUE
+    theme: lumen
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.path = "../Output/")
+```
+
+
+# Introduction
+
+For this project, we will be looking at a project completed in my Bacterial Genetics Lab for the Spring 2022 semester, and my further analysis on the class project data. 
+
+
+## Background
+In _Escheria coli_, the MicF RNA gene controls the expression of the outer membrane porin gene _ompF_.
+
+There are 10 genes used to test whether or not MicF regulate translation of them. Results are made upon making comparative observations based on fluorescence absorbency (FL/OD) between the gene-gfp control and gene-gfp-MicF. Three possible results are activation, repression, and inconclusive. If there is a significant greater FL/OD in the gene-gfp-MicF, MicF activates the gene. If there is a significant lower FL/OD in the gene-gfp-MicF, MicF represses the gene.
+
+-   _wza_: produces the protein that is responsible for the transport of capsular polysaccharide from periplasmic space to surface, and the participation in the formaiton of bacterial capsules
+-   _sbcB_: produces the protein that degrades ssDNAs, and releases deoxyribose-phosphate moeities after the cleavage of DNA at an AP site
+-   _ysaB_: produces the non-essential lipoprotein. Function not well-studied
+-   _smrB_: produces the protein that cleaves mRNAs upstream of paused ribosomes
+-   _seqA_: produces the protein that modulates the replication initiation at _E. coli_ oriC
+-   _hypB_: produces the aporepressor protein that is involved in teh maturation of NiFe, and transfer of nickle from the HypB GTPase domain to HypA in the presence of GDP
+-   _serA_: produces the protein that catalyzes the reversible oxidation of 3-phospho-D-glycerate to 3-phosphooxypyruvate and of 2-hydroxyglutarate to 2-oxoglutarate
+-   _rsmD_: produces the protein that methylates the guanine in position 966 of 16S rRNA in the assembled 30S particle
+-   _lrp_: produces the protein that mediates the global reponse to leucine
+-   _ybaY_: produces the protein involved in lipoprotein biosynthesis and glycoprotein biosynthesis
+
+Overall results of MicF regulation was not well presented by students in the class in my opinion. Therefore, I am performing t-tests to get better results confirmed with the calculated p-values.
+
+# Load libraries
+
+```{r cars}
+library(tidyverse)
+library(here)
+library(rstatix)
+library(ggpubr)
+library(kableExtra)
+library(patchwork)
+library(flair)
+library(tvthemes)
+library(sysfonts)
+library(showtextdb)
+library(showtext)
+```
+
+
+## Add fonts
+```{r}
+font_add_google("Zen Loop", "zen")
+```
+
+# Load data
+
+```{r}
+All_Genes <- read_csv(here("MicF_reg", "data", "all_genes_FL_OD.csv"))
+view(All_Genes)
+```
+
+
+# Data analysis
+
+To obtain each gene p-value and average FL/0D. 
+
+```{r}
+All_Genes %>% 
+  drop_na()
+
+wza_p <- All_Genes %>% 
+  t_test(wza_FL_OD ~ wza) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "wza_p.csv"))
+
+sbcB_p <- All_Genes %>% 
+  t_test(sbcB_FL_OD ~ sbcB) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "sbcB_p.csv"))
+
+ysaB_p <- All_Genes %>% 
+  t_test(ysaB_FL_OD ~ ysaB) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "ysaB_p.csv"))
+
+smrB_p <- All_Genes %>% 
+  t_test(smrB_FL_OD ~ smrB) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "smrB_p.csv"))
+
+seqA_p <- All_Genes %>% 
+  t_test(seqA_FL_OD ~ seqA) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "seqA_p.csv"))
+
+hypB_p <- All_Genes %>% 
+  t_test(hypB_FL_OD ~ hypB) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "hypB_p.csv"))
+
+serA_p <- All_Genes %>% 
+  t_test(serA_FL_OD ~ serA) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "serA_p.csv"))
+
+rsmD_p <- All_Genes %>% 
+  t_test(rsmD_FL_OD ~ rsmD) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "rsmD_p.csv"))
+
+lrp_p <- All_Genes %>% 
+  t_test(lrp_FL_OD ~ lrp) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "lrp_p.csv"))
+
+ybaY_p <- All_Genes %>% 
+  t_test(ybaY_FL_OD ~ ybaY) %>% 
+  write_csv(here("MicF_reg", "data", "p_values", "ybaY_p.csv"))
+```
+
+
+# Table
+
+Now, to make a table that display the p-values to the corresponding gene.
+
+```{r, Table}
+p_Path <- here("MicF_reg", "data", "p_values")
+
+p_files <- dir(path = p_Path, pattern = ".csv", full.names = TRUE)
+
+p_data <-p_files %>% 
+  set_names() %>% 
+  map_df(read_csv, .id = "filename") %>% 
+  group_by(filename) %>% 
+  mutate(Control = group1, MicF = group2) %>% 
+  summarise(Control, MicF, p) %>%
+  kbl() %>% 
+  kable_material() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+                full_width = FALSE, fixed_thead = T, position = "center", 
+                font_size = 12)
+p_data
+```
+
+
+## Adding Flair
+```{r}
+decorate('p_data <-p_files %>% 
+  set_names() %>% 
+  map_df(read_csv, .id = "filename") %>% 
+  group_by(filename) %>% 
+  mutate(Control = group1, MicF = group2) %>% 
+  summarise(Control, MicF, p) %>%
+  kbl() %>% 
+  kable_material() %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+                full_width = FALSE, fixed_thead = T, position = "center", 
+                font_size = 12)') %>% 
+  flair_funs(color = "Coral", underline = TRUE) %>% 
+  knit_print.with_flair()
+```
+
+
+# Function
+
+Make a function for skeleton plot coding to help speed up the process of plotting each gene results.
+
+```{r, Function}
+showtext_auto()
+
+MicF_reg_plot <- function(data = All_Genes, x, y){
+  ggplot(data, aes(x = {{x}}, y = {{y}}, color = {{x}})) +
+    geom_boxplot() +
+    theme_hildaDusk() +
+    theme(plot.title = element_text(size = 36, hjust = 0.5, family = "zen"),
+        axis.title = element_text(size = 24, family = "zen"), 
+        axis.text = element_text(size = 20, family = "zen")) +
+    labs(title = "MicF Expression Assay",
+       x = "Genes",
+       y = "FL/OD",
+       caption = "BIO467L Bacterial Genetics by Melissa Takahashi")
+}
+```
+
+
+# Plots
+
+Plots will be grouped together to the following:
+
+-   Group 1: _wza_ and _sbcB_
+-   Group 2: _ysaB_ and _smrB_
+-   Group 3: _seqA_ and _hypB_
+-   Group 4: _serA_ and _rsmD_
+-   Group 5: _lrp_ and _ybaY_
+
+```{r}
+wza_plot <- MicF_reg_plot(x = wza, y = wza_FL_OD) + 
+  ylim(300, 2300) +
+  stat_pvalue_manual(wza_p, label = "p", y.position = 2100) 
+
+sbcB_plot <- MicF_reg_plot(x = sbcB, y = sbcB_FL_OD) +
+  ylim(6000, 19000) +
+  stat_pvalue_manual(sbcB_p, label = "p", y.position = 17000)
+
+ysaB_plot <- MicF_reg_plot(x = ysaB, y = ysaB_FL_OD) +
+  ylim(500, 2800) +
+  stat_pvalue_manual(ysaB_p, label = "p", y.position = 2600)
+
+smrB_plot <- MicF_reg_plot(x = smrB, y = smrB_FL_OD) +
+  ylim(1500, 4400) +
+  stat_pvalue_manual(smrB_p, label = "p", y.position = 4200)
+
+seqA_plot <- MicF_reg_plot(x = seqA, y = seqA_FL_OD) +
+  ylim(1500, 4000) +
+  stat_pvalue_manual(seqA_p, label = "p", y.position = 3800)
+
+hypB_plot <- MicF_reg_plot(x = hypB, y = hypB_FL_OD) +
+  ylim(4500, 12000) +
+  stat_pvalue_manual(hypB_p, label = "p", y.position = 11500)
+
+serA_plot <- MicF_reg_plot(x = serA, y = serA_FL_OD) +
+  ylim(1500, 4200) + 
+  stat_pvalue_manual(serA_p, label = "p", y.position = 4000)
+
+rsmD_plot <- MicF_reg_plot(x = rsmD, y = rsmD_FL_OD) +
+  ylim(2000, 3400) +
+  stat_pvalue_manual(rsmD_p, label = "p", y.position = 3200)
+
+lrp_plot <- MicF_reg_plot(x = lrp, y = lrp_FL_OD) +
+  ylim(1500, 6000) +
+  stat_pvalue_manual(lrp_p, label = "p", y.position = 5800)
+
+ybaY_plot <- MicF_reg_plot(x = ybaY, y = ybaY_FL_OD)+
+  ylim(5500, 10000) +
+  stat_pvalue_manual(ybaY_p, label = "p", y.position = 9800)
+```
+
+
+## Group 1 
+
+```{r, Group1, outwidth = "50%", fig.align='center'}
+wza_plot + sbcB_plot
+```
+
+
+## Group 2 
+
+```{r, Group2, outwidth = "50%", fig.align='center'}
+ysaB_plot + smrB_plot
+```
+
+
+## Group 3
+
+```{r, Group3, outwidth = "50%", fig.align='center'}
+seqA_plot + hypB_plot
+```
+
+
+## Group 4 
+
+```{r, Group4, outwidth = "50%", fig.align='center'}
+serA_plot + rsmD_plot
+```
+
+
+## Group 5 
+
+```{r, Group5, outwidth = "50%", fig.align='center'}
+lrp_plot + ybaY_plot
+```
+
+
+# MicF regulation result conclusions
+
+The overall average p-value is 0.33. Examining the results based on a typical 95% confidence level (p<0.05) would conclude most of the genes as "Inconclusive". Therefore, I have to conclude the results based on the average p-value. I decided to examine the results based on 75% confidence level (p<0.25). 
+
+-   _wza_: Inconclusive
+-   _sbcB_: Repression
+-   _ysaB_: Activation
+-   _smrB_: Activation
+-   _seqA_: Inconclusive
+-   _hypB_: Inconclusive
+-   _serA_: Inconclusive
+-   _rsmD_: Repression
+-   _lrp_: Inconclusive
+-   _ybaY_: Repression
+
+
+## Reference:
+
+1. Delihas N, Forst S. 2001. MicF: an antisense RNA gene involved in response of Escherichia coli to global stress factors. J Mol Biol 313:1-12.
+2. Lesnyak DV, Osipiuk J, Sergiev PV, Bogdanov AA, Edwards A, Joachimiak A, Dontsova OA. 2007. Methyltransferase that modifies guanine 966 of the 16S rRNA: functional identication and tertiary structure structure. J Biol Chem 282:5880-7.
+3. Niu, Tianshui, et al. 2019. _Wza_ gene knockout decreases _Acinetobacter baumannii_ virulence and affects Wzy-dependent capsular polysaccharide synthesis. Virulence. 2020; 11(1): 1–13.
+4. Saito, Kazuki, et al. 2021. Ribosome collision in bacteria promote ribosome rescue by triggering mRNA cleavage by SmrB. bioRxiv 2021.08.16.456513.
+5. Slater, S, et al. 1995. E. coli SeqA protein binds oriC in two different methyl-modulated reactions appropriate to its role in DNA replication initiation and origin sequestration. Cell. 1995 Sep 22;82(6):927-36. 
+6. UniProtKB-P04995 (EX1_ECOLI). UniProt.
+7. UniProtKB-P0AAN3 (HYPB_ECOLI). UniProt. 
+8. uniProtKB-P0ACJ0 (LRP_ECOLI). UniProt.
+9. ybaY. STRING CONSORTIUM. 2022.
+10. Zhao G, Wrinkler ME. 1996. A novel alpha-ketoglutarate reductase activity of the serA-encoded 3-phosphoglycerate dehydrogenase of Escherichia coli K-12 and its possible implications for human 2-hydroxyglutaric aciduria. J Bacteriol 178:232-9.
