@@ -4,6 +4,7 @@
 **Creator:** Alex Dang
 
 **Description**
+
 The overall goal of my independent final project is to tell a story and explain my data of choice, MicF Regulation data, using the coding skills in R I have learned in class. MicF Regulation data was obtained from one of my other classes this Spring 2022 semester, Bacterial Genetics. The data frame reflects the end results of the semester-long class project, in which the purpose of it was to demonstrate whether or not MicF regulates the selected genes. The data itself was already analyzed by the class, however without any detailed statistics or involved any coding skills. In my opinion, the analysis that was done did not truly reflects the data, and inaccurate result conclusions were reported. In this project, we will be looking at a detailed analysis of the MicF Regulation data and more accurate result conclusions. 
 
 **Feature Outputs**
