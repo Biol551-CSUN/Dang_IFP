@@ -3,9 +3,12 @@ title: "MicF Regulation"
 author: "Alex Dang"
 date: "5/8/2022"
 output: 
-  html_document:
-    toc: TRUE
-    theme: lumen
+  rmdformats::downcute:
+    self_contained: TRUE
+    thumbnails: TRUE
+    lightbox: TRUE
+    gallery: FALSE
+    highlight: github
 ---
 
 
@@ -39,7 +42,7 @@ Overall results of MicF regulation was not well presented by students in the cla
 
 # Load libraries
 
-```{r cars}
+```{r}
 library(tidyverse)
 library(here)
 library(rstatix)
@@ -126,7 +129,7 @@ p_Path <- here("MicF_reg", "data", "p_values")
 
 p_files <- dir(path = p_Path, pattern = ".csv", full.names = TRUE)
 
-p_data <-p_files %>% 
+p_data1 <-p_files %>% 
   set_names() %>% 
   map_df(read_csv, .id = "filename") %>% 
   group_by(filename) %>% 
@@ -134,10 +137,15 @@ p_data <-p_files %>%
   summarise(Control, MicF, p) %>%
   kbl() %>% 
   kable_material() %>% 
-  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+  kable_material_dark(c("striped", "hover", "condensed", "responsive"), 
                 full_width = FALSE, fixed_thead = T, position = "center", 
-                font_size = 12)
-p_data
+                font_size = 12) %>% 
+  row_spec(0, bold = T, color = "white", background = "gray") 
+p_data2 <- p_data1 %>% 
+  row_spec(1:10, color = "gray") %>% 
+  as_image(here("MicF_reg", "output", "all_gene_p_table.png"), 
+           width = 5, height = 8)
+p_data1
 ```
 
 
@@ -169,14 +177,15 @@ showtext_auto()
 MicF_reg_plot <- function(data = All_Genes, x, y){
   ggplot(data, aes(x = {{x}}, y = {{y}}, color = {{x}})) +
     geom_boxplot() +
-    theme_hildaDusk() +
-    theme(plot.title = element_text(size = 36, hjust = 0.5, family = "zen"),
-        axis.title = element_text(size = 24, family = "zen"), 
-        axis.text = element_text(size = 20, family = "zen")) +
+    theme_hildaNight() +
+    theme(plot.title = element_text(size = 42, hjust = 0.5, family = "zen"),
+        axis.title = element_text(size = 26, family = "zen"), 
+        axis.text = element_text(size = 20, family = "zen"), 
+        plot.caption = element_text(size = 10)) +
     labs(title = "MicF Expression Assay",
        x = "Genes",
        y = "FL/OD",
-       caption = "BIO467L Bacterial Genetics by Melissa Takahashi")
+       caption = "BIO467L Bacterial Genetics by Takahashi")
 }
 ```
 
@@ -285,7 +294,7 @@ The overall average p-value is 0.33. Examining the results based on a typical 95
 -   _ybaY_: Repression
 
 
-## Reference:
+# Reference:
 
 1. Delihas N, Forst S. 2001. MicF: an antisense RNA gene involved in response of Escherichia coli to global stress factors. J Mol Biol 313:1-12.
 2. Lesnyak DV, Osipiuk J, Sergiev PV, Bogdanov AA, Edwards A, Joachimiak A, Dontsova OA. 2007. Methyltransferase that modifies guanine 966 of the 16S rRNA: functional identication and tertiary structure structure. J Biol Chem 282:5880-7.
