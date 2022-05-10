@@ -19,13 +19,13 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.path = 
 
 # Introduction
 
-For this project, we will be looking at a project completed in my Bacterial Genetics Lab for the Spring 2022 semester, and my further analysis on the class project data. 
+For this project, we will be looking at a project completed in my Bacterial Genetics Lab for the Spring 2022 semester, and my analysis on the class project data. 
 
 
 ## Background
 In _Escheria coli_, the MicF RNA gene controls the expression of the outer membrane porin gene _ompF_.
 
-There are 10 genes used to test whether or not MicF regulate translation of them. Results are made upon making comparative observations based on fluorescence absorbency (FL/OD) between the gene-gfp control and gene-gfp-MicF. Three possible results are activation, repression, and inconclusive. If there is a significant greater FL/OD in the gene-gfp-MicF, MicF activates the gene. If there is a significant lower FL/OD in the gene-gfp-MicF, MicF represses the gene.
+There are 10 genes used to test whether or not MicF regulate translation of them. Results were made upon making comparative observations based on fluorescence absorbency (FL/OD) between the gene-gfp control and gene-gfp-MicF. Three possible results are activation, repression, and inconclusive. If there is a significant greater FL/OD in the gene-gfp-MicF, MicF activates the gene. If there is a significant lower FL/OD in the gene-gfp-MicF, MicF represses the gene.
 
 -   _wza_: produces the protein that is responsible for the transport of capsular polysaccharide from periplasmic space to surface, and the participation in the formaiton of bacterial capsules
 -   _sbcB_: produces the protein that degrades ssDNAs, and releases deoxyribose-phosphate moeities after the cleavage of DNA at an AP site
@@ -72,7 +72,7 @@ view(All_Genes)
 
 # Data analysis
 
-To obtain each gene p-value and average FL/0D. 
+To obtain each gene p-value and average FL/OD. 
 
 ```{r}
 All_Genes %>% 
