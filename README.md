@@ -25,5 +25,7 @@ The overall goal of my independent final project is to tell a story and explain 
 
 ## **Folders:**
 <u>Data<u>: [MicF Regulation data](https://github.com/Biol551-CSUN/Dang_IFP/blob/main/MicF_reg/data/all_genes_FL_OD.csv), [p value data folder](https://github.com/Biol551-CSUN/Dang_IFP/tree/main/MicF_reg/data/p_values)
+
 <u>Script<u>: [MicF Regulation Rmd](https://github.com/Biol551-CSUN/Dang_IFP/blob/main/MicF_reg/scripts/MicF_reg.Rmd)
+
 <u>Output<u>: [p value table](https://github.com/Biol551-CSUN/Dang_IFP/blob/main/MicF_reg/output/all_gene_p_table.png), [Group 1: _wza_ and _sbcB_](https://github.com/Biol551-CSUN/Dang_IFP/blob/main/MicF_reg/output/Group1-1.png), [Group 2 : _ysaB_ and _smrB_](https://github.com/Biol551-CSUN/Dang_IFP/blob/main/MicF_reg/output/Group2-1.png), [Group3 : _seqA_ and _hypB_](https://github.com/Biol551-CSUN/Dang_IFP/blob/main/MicF_reg/output/Group3-1.png), [Group4 : _serA_ and _rsmD_](https://github.com/Biol551-CSUN/Dang_IFP/blob/main/MicF_reg/output/Group4-1.png), [Group5 : _lrp_ and _ybaY_](lrphttps://github.com/Biol551-CSUN/Dang_IFP/tree/main/MicF_reg/output)
